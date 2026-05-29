@@ -1,0 +1,9 @@
+.git
+.idea
+.mvn
+target
+docs
+*.log
+*.iml
+*.md
+Backend Developer (Java) Core - Assessment.pdf
