@@ -183,3 +183,19 @@ See `docs/performance-notes.md` for the metrics and tuning considerations.
 
 See `docs/project-document.md` for the class-by-class explanation, request flow, concurrency handling, and scaling discussion you can use in interviews.
 
+## Interview Pitch
+
+If someone asks, “Tell me about your project,” you can say:
+
+> I built a Spring Boot payment orchestration service that routes card and UPI payments to the right provider, protects the system with idempotency, retries, and circuit breakers, and stores payment state in MySQL with Redis for fast duplicate detection.  
+> The goal was to solve a real fintech problem: payment APIs must stay correct under retries, provider failures, and concurrent traffic.  
+> My solution keeps the API stateless so it can scale horizontally, normalizes errors, records metrics for observability, and ensures the same payment request never gets processed twice.  
+> The impact is a backend that behaves like a production payment platform and demonstrates the engineering tradeoffs you need in fintech systems.
+
+## Why This Project Matters
+
+- It solves a real payment reliability problem instead of a basic CRUD use case.
+- It shows practical backend engineering: consistency, failure handling, concurrency, and scaling.
+- It demonstrates production-minded thinking with metrics, OpenAPI, Redis, and durable storage.
+- It gives you a strong interview story for fintech and payments roles.
+

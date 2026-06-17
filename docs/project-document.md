@@ -1,5 +1,12 @@
 # Project Document
 
+## 0. Interview-ready summary
+
+If you want a short answer for interviews, use this:
+
+> I built a fintech-style payment orchestration service in Spring Boot. It receives payment requests, routes them to the correct provider, protects against duplicate submissions with idempotency, and stores the final payment state in MySQL. Redis is used for fast request deduplication, while retries, timeouts, and circuit breakers protect the provider integration layer.  
+> The project solves the real problem of safe payment processing under retries, concurrency, and partial failures. The result is a stateless, horizontally scalable backend that behaves like a production payments platform and demonstrates the skills needed in high-volume fintech systems.
+
 ## 1. What this project is
 
 This is a payment orchestration backend built in Spring Boot. It receives payment requests, routes them to the correct payment provider, stores the payment state in MySQL, and protects against duplicate requests with idempotency.
@@ -212,7 +219,28 @@ Use these talking points:
 - The design is stateless at the API layer, so it can scale horizontally.
 - Metrics and correlation IDs make the system operable in production.
 
-## 10. Strong interview answers
+## 10. How to explain the problem, solution, and impact
+
+### The problem
+
+Payment systems deal with retries, duplicate requests, slow providers, and concurrent traffic. If a service does not handle these correctly, it can cause double charges, inconsistent states, and poor user experience.
+
+### The solution
+
+This project solves those problems by combining:
+
+- idempotency keys to deduplicate repeated submissions
+- Redis for fast duplicate detection and in-flight request tracking
+- MySQL for durable payment state
+- provider routing to choose the right payment path
+- retries, timeout protection, and circuit breakers for resilience
+- correlation IDs and metrics for observability
+
+### The impact
+
+The service becomes safer, more predictable, and easier to operate under load. It behaves like a real payment backend where correctness matters as much as speed. In interviews, this lets you show that you understand not just how to build endpoints, but how to design systems that survive real production traffic.
+
+## 11. Strong interview answers
 
 ### How do you handle duplicate requests?
 
