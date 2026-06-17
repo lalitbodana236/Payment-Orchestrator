@@ -199,3 +199,24 @@ If someone asks, “Tell me about your project,” you can say:
 - It demonstrates production-minded thinking with metrics, OpenAPI, Redis, and durable storage.
 - It gives you a strong interview story for fintech and payments roles.
 
+## Resume Description
+
+Built a Spring Boot payment orchestration backend for fintech-style transaction processing, with provider routing, Redis-backed idempotency, MySQL persistence, retries, failover, and observability. Designed the service to handle duplicate requests safely, isolate provider failures, and scale horizontally under high traffic. The project demonstrates production-ready backend thinking for transactional systems.
+
+## GitHub Showcase
+
+**Project:** Payment Orchestrator  
+**Repository:** `https://github.com/lalitbodana236/payment-orchestrator`
+
+### What it demonstrates
+
+- Payment routing for `CARD` and `UPI`
+- Idempotent request handling with Redis and MySQL
+- Retry and failover for provider resilience
+- Metrics, OpenAPI docs, and correlation IDs for observability
+- Docker-based local deployment
+
+### Quick pitch
+
+This project is a fintech backend that focuses on correctness under retries, duplicate submissions, and provider failures. It shows how to design a stateless service that can scale horizontally while keeping payment processing safe and traceable.
+
