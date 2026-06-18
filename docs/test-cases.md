@@ -6,7 +6,7 @@ This document classifies the project scenarios into sanity, regression, and inte
 
 | ID | Scenario | Input | Expected result |
 |---|---|---|---|
-| S1 | Create payment with valid `CARD` request | Valid body + unique idempotency key | `201 Created`, payment persisted, provider `PROVIDER_A` selected |
+| S1 | Create payment with valid `DEBIT_CARD` request | Valid body + unique idempotency key | `201 Created`, payment persisted, provider `PROVIDER_A` selected |
 | S2 | Create payment with valid `UPI` request | Valid body + unique idempotency key | `201 Created`, payment persisted, provider `PROVIDER_B` selected |
 | S3 | Fetch existing payment | Known `paymentReference` | `200 OK` with payment details |
 | S4 | Repeat same create request | Same idempotency key and same payload | Cached response returned, no duplicate payment created |
@@ -26,7 +26,7 @@ This document classifies the project scenarios into sanity, regression, and inte
 
 | ID | Scenario | Input | Expected result |
 |---|---|---|---|
-| I1 | Primary provider succeeds | `CARD` request | Provider A response stored, status `SUCCESS` |
+| I1 | Primary provider succeeds | `DEBIT_CARD` request | Provider A response stored, status `SUCCESS` |
 | I2 | Primary provider fails and failover succeeds | Primary provider returns retryable failure | Secondary provider used, status `SUCCESS` |
 | I3 | Provider timeout | Connector exceeds timeout | Retry occurs, then failover or failure response |
 | I4 | Retryable provider exception | `TransientProviderException` | Retry template performs configured attempts |

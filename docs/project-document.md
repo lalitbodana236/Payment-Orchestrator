@@ -78,7 +78,7 @@ It is designed to look and behave like a real fintech backend rather than a thro
 ### Routing layer
 
 - `RoutingStrategy`: chooses provider paths for a payment method.
-- `PaymentRoutingStrategy`: maps `CARD -> PROVIDER_A` first and `UPI -> PROVIDER_B` first.
+- `PaymentRoutingStrategy`: maps `DEBIT_CARD`, `CREDIT_CARD`, and `NET_BANKING` to `PROVIDER_A` first, and `UPI` to `PROVIDER_B` first.
 - `PaymentRoute`: keeps the primary provider and fallback candidates together.
 
 ### Provider layer
@@ -125,7 +125,7 @@ It is designed to look and behave like a real fintech backend rather than a thro
 5. If a cached response exists, the service returns it immediately.
 6. If another request is already processing the same key, the request waits for the cached response or times out with a conflict.
 7. If the request is new, the service creates a `PaymentEntity` with status `CREATED`.
-8. `PaymentRoutingStrategy` chooses the provider order.
+8. `PaymentRoutingStrategy` chooses the provider order based on the payment method.
 9. `ProviderExecutor` calls the primary provider first and retries transient failures using the configured retry policy.
 10. If the primary provider fails, the orchestration layer falls back to the next provider in the route.
 11. On success, the entity is updated to `SUCCESS` and the response is cached for future duplicate requests.
@@ -240,7 +240,21 @@ This project solves those problems by combining:
 
 The service becomes safer, more predictable, and easier to operate under load. It behaves like a real payment backend where correctness matters as much as speed. In interviews, this lets you show that you understand not just how to build endpoints, but how to design systems that survive real production traffic.
 
-## 11. Strong interview answers
+## 12. Where to see the recorded metrics
+
+The custom metrics recorded by `PaymentMetricsRecorder` are visible in three places:
+
+- `GET /api/v1/observability/metrics` for a human-friendly snapshot
+- `GET /actuator/metrics` for Spring Boot actuator inspection
+- `GET /actuator/prometheus` for Prometheus scraping
+
+The main custom metrics are:
+
+- `payment.api.latency`
+- `payment.processed.total`
+- `payment.retry.total`
+
+## 13. Strong interview answers
 
 ### How do you handle duplicate requests?
 

@@ -12,7 +12,8 @@ public class PaymentRoutingStrategy implements RoutingStrategy {
     @Override
     public PaymentRoute route(PaymentMethod paymentMethod) {
         return switch (paymentMethod) {
-            case CARD -> new PaymentRoute(PaymentProviderType.PROVIDER_A, List.of(PaymentProviderType.PROVIDER_B));
+            case DEBIT_CARD, CREDIT_CARD, NET_BANKING ->
+                    new PaymentRoute(PaymentProviderType.PROVIDER_A, List.of(PaymentProviderType.PROVIDER_B));
             case UPI -> new PaymentRoute(PaymentProviderType.PROVIDER_B, List.of(PaymentProviderType.PROVIDER_A));
         };
     }

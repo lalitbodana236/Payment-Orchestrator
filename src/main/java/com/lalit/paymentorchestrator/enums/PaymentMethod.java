@@ -1,6 +1,8 @@
 package com.lalit.paymentorchestrator.enums;
 
 public enum PaymentMethod {
-    CARD,
-    UPI
+    DEBIT_CARD,
+    CREDIT_CARD,
+    UPI,
+    NET_BANKING
 }

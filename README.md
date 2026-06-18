@@ -8,7 +8,8 @@ This service:
 
 - Creates payments through a routing layer
 - Fetches payment details by payment reference
-- Routes `CARD` traffic to `PROVIDER_A` and `UPI` traffic to `PROVIDER_B`
+- Routes `DEBIT_CARD`, `CREDIT_CARD`, and `NET_BANKING` traffic to `PROVIDER_A`
+- Routes `UPI` traffic to `PROVIDER_B`
 - Retries provider execution with exponential backoff
 - Falls back to the secondary provider when the primary path fails
 - Deduplicates repeated create requests with idempotency keys
@@ -31,7 +32,7 @@ This service:
 
 - `Create Payment API`: `POST /api/v1/payments`
 - `Fetch Payment API`: `GET /api/v1/payments/{paymentReference}`
-- `Routing`: `CARD -> PROVIDER_A`, `UPI -> PROVIDER_B`
+- `Routing`: `DEBIT_CARD/CREDIT_CARD/NET_BANKING -> PROVIDER_A`, `UPI -> PROVIDER_B`
 - `Retry & Failover`: provider retries use Spring Retry and secondary provider fallback is handled in orchestration
 - `Idempotency`: same key + same payload returns the cached response; same key + different payload raises conflict
 - `Payment Status Tracking`: lifecycle is persisted in `payments` with `CREATED`, `PROCESSING`, `RETRYING`, `SUCCESS`, and `FAILED`
@@ -109,7 +110,7 @@ Request body:
 {
   "amount": 120.50,
   "currency": "USD",
-  "paymentMethod": "CARD"
+  "paymentMethod": "DEBIT_CARD"
 }
 ```
 
@@ -127,6 +128,22 @@ curl http://localhost:10005/api/v1/payments/pay_123
 
 - Swagger UI: `http://localhost:10005/swagger-ui/index.html`
 - OpenAPI JSON: `http://localhost:10005/v3/api-docs`
+
+## Observability
+
+You can inspect the custom metrics recorded by `PaymentMetricsRecorder` here:
+
+- Application metrics snapshot: `GET /api/v1/observability/metrics`
+- Actuator metrics: `GET /actuator/metrics`
+- Prometheus export: `GET /actuator/prometheus`
+
+The application records metrics such as:
+
+- `payment.api.latency`
+- `payment.processed.total`
+- `payment.retry.total`
+
+These show request timing, payment outcomes, and retry activity by provider and failure reason.
 
 ## Persistence Model
 
@@ -146,7 +163,7 @@ curl http://localhost:10005/api/v1/payments/pay_123
 
 - `amount`: decimal value greater than `0`
 - `currency`: 3-letter ISO-like uppercase currency code
-- `paymentMethod`: `CARD` or `UPI`
+- `paymentMethod`: `DEBIT_CARD`, `CREDIT_CARD`, `UPI`, or `NET_BANKING`
 - `Idempotency-Key`: required header for deduplication
 
 ### Create Payment Response
@@ -187,7 +204,7 @@ See `docs/project-document.md` for the class-by-class explanation, request flow,
 
 If someone asks, “Tell me about your project,” you can say:
 
-> I built a Spring Boot payment orchestration service that routes card and UPI payments to the right provider, protects the system with idempotency, retries, and circuit breakers, and stores payment state in MySQL with Redis for fast duplicate detection.  
+> I built a Spring Boot payment orchestration service that routes debit card, credit card, UPI, and net banking payments to the right provider, protects the system with idempotency, retries, and circuit breakers, and stores payment state in MySQL with Redis for fast duplicate detection.  
 > The goal was to solve a real fintech problem: payment APIs must stay correct under retries, provider failures, and concurrent traffic.  
 > My solution keeps the API stateless so it can scale horizontally, normalizes errors, records metrics for observability, and ensures the same payment request never gets processed twice.  
 > The impact is a backend that behaves like a production payment platform and demonstrates the engineering tradeoffs you need in fintech systems.
@@ -210,7 +227,7 @@ Built a Spring Boot payment orchestration backend for fintech-style transaction 
 
 ### What it demonstrates
 
-- Payment routing for `CARD` and `UPI`
+- Payment routing for `DEBIT_CARD`, `CREDIT_CARD`, `UPI`, and `NET_BANKING`
 - Idempotent request handling with Redis and MySQL
 - Retry and failover for provider resilience
 - Metrics, OpenAPI docs, and correlation IDs for observability
@@ -219,4 +236,3 @@ Built a Spring Boot payment orchestration backend for fintech-style transaction 
 ### Quick pitch
 
 This project is a fintech backend that focuses on correctness under retries, duplicate submissions, and provider failures. It shows how to design a stateless service that can scale horizontally while keeping payment processing safe and traceable.
-
